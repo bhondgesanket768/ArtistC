@@ -2,8 +2,9 @@ import React from 'react';
 import { View, StyleSheet, Image, TouchableHighlight } from 'react-native';
 import AppText from '../AppText';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 
-function ListItems({ image, title, subTitle, onPress, renderRightActions, IconComponent }) {
+function ListItems({ image, title, subTitle, onPress, renderRightActions, IconComponent, isChevron }) {
     return (
         <Swipeable renderRightActions={renderRightActions}>
             <TouchableHighlight onPress={onPress} underlayColor="#f8f4f4" >
@@ -11,9 +12,14 @@ function ListItems({ image, title, subTitle, onPress, renderRightActions, IconCo
                     {IconComponent}
                     {image && <Image source={image} style={styles.image} />}
                     <View style={styles.detailContainer}>
-                        <AppText style={styles.title}>{title}</AppText>
-                        {subTitle && <AppText style={styles.subTitle}>{subTitle}</AppText>}
+                        <AppText style={styles.title} numberOfLines={1}>{title}</AppText>
+                        {subTitle && <AppText style={styles.subTitle} numberOfLines={2}>{subTitle}</AppText>}
                     </View>
+                    {isChevron &&
+                        <View style={styles.chevron}>
+                            <MaterialCommunityIcons name="chevron-right" size={20} color="#6e6969" />
+                        </View>
+                    }
                 </View>
             </TouchableHighlight>
         </Swipeable>
@@ -24,7 +30,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         padding: 15,
-        backgroundColor: "white"
+        backgroundColor: "white",
     },
     image: {
         width: 70,
@@ -39,7 +45,11 @@ const styles = StyleSheet.create({
     },
     detailContainer: {
         marginLeft: 10,
-        justifyContent: "center"
+        justifyContent: "center",
+        flex: 1,
+    },
+    chevron: {
+        alignSelf: "center"
     }
 })
 

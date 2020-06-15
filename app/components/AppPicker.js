@@ -5,14 +5,14 @@ import AppText from './AppText';
 import Screen from './Screen';
 import PickerItem from './PickerItem';
 
-function AppPicker({ icon, placeholder, items, selected, onSelectItem }) {
+function AppPicker({ icon, placeholder, items, selected, onSelectItem, width = "100%", PickerItemComponent = PickerItem, numberOfColumns = 1 }) {
 
     const [modalVisible, setModalVisible] = useState(false)
 
     return (
         <React.Fragment>
             <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
-                <View style={styles.container}>
+                <View style={[styles.container, { width }]}>
                     {icon && <MaterialCommunityIcons name={icon} size={20} color="#6e6969" style={styles.icon} />}
                     {selected ? (
                         <AppText style={styles.text}>{selected.label}</AppText>
@@ -23,19 +23,20 @@ function AppPicker({ icon, placeholder, items, selected, onSelectItem }) {
                 </View>
             </TouchableWithoutFeedback>
             <Modal visible={modalVisible} animationType="fade" >
-                <Screen>
-                    <Button title="close" onPress={() => setModalVisible(false)} />
-                    <FlatList
-                        data={items}
-                        keyExtractor={item => item.value.toString()}
-                        renderItem={({ item }) =>
-                            <PickerItem label={item.label} onPress={() => {
-                                setModalVisible(false)
-                                onSelectItem(item)
-                            }} />
-                        }
-                    />
-                </Screen>
+                <Button title="close" onPress={() => setModalVisible(false)} />
+                <FlatList
+                    data={items}
+                    keyExtractor={item => item.value.toString()}
+                    numColumns={numberOfColumns}
+                    renderItem={({ item }) =>
+                        <PickerItemComponent label={item.label} onPress={() => {
+                            setModalVisible(false)
+                            onSelectItem(item)
+                        }}
+                            item={item}
+                        />
+                    }
+                />
             </Modal>
         </React.Fragment>
     );
@@ -46,7 +47,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#f8f4f4",
         borderRadius: 25,
         flexDirection: "row",
-        width: "100%",
         padding: 15,
         marginVertical: 10
     },
