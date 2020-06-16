@@ -2,11 +2,11 @@ import React from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AppText from './AppText';
 
-function Card({ title, subTitle, image, onPress }) {
+function Card({ title, subTitle, imageUrl, onPress }) {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.card}>
-                <Image source={image} style={styles.cardImg} />
+                <Image source={{ uri: imageUrl }} style={styles.cardImg} />
                 <View style={styles.container}>
                     <AppText style={styles.title} numberOfLines={1}>{title}</AppText>
                     <AppText style={styles.subTitle} numberOfLines={2}>{subTitle}</AppText>
