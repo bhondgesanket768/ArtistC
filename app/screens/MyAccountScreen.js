@@ -3,6 +3,7 @@ import Screen from "../components/Screen"
 import { View, StyleSheet, FlatList } from 'react-native';
 import Icon from '../components/Icon';
 import { ListItemSeparator, ListItems } from "../components/Lists"
+import routes from "../navigation/Routes"
 
 const menuItems = [
     {
@@ -17,11 +18,12 @@ const menuItems = [
         icon: {
             name: "email",
             backgroundColor: "green"
-        }
+        },
+        targetScreen: routes.MESSAGES
     }
 ]
 
-function MyAccountScreen(props) {
+function MyAccountScreen({ navigation }) {
     return (
         <Screen style={styles.screen}>
             <View style={styles.userContainer}>
@@ -42,6 +44,8 @@ function MyAccountScreen(props) {
                             IconComponent={
                                 <Icon name={item.icon.name} backgroundColor={item.icon.backgroundColor} />
                             }
+                            onPress={() => navigation.navigate(item.targetScreen)}
+                            isChevron
                         />
                     }
                 />
