@@ -11,10 +11,13 @@ export default useApi = (apiFunc) => {
         setLoading(false)
 
         if (!response.ok) {
-            return setError(true)
+            setError(true)
+            return response
         }
         setError(false)
         setData(response.data)
+
+        return response
     }
 
     return { data, error, loading, request }

@@ -18,28 +18,30 @@ function ListingsScreen({ navigation }) {
     }, [])
 
     return (
-        <Screen style={styles.screen}>
-            {error &&
-                <React.Fragment>
-                    <AppText>Coulden't retrive the listing</AppText>
-                    <AppButton title="Try again" onPress={loadListings} />
-                </React.Fragment>
-            }
+        <React.Fragment>
             <ActivityIndicator visible={loading} />
-            <FlatList
-                data={listings}
-                keyExtractor={list => list._id.toString()}
-                renderItem={({ item }) =>
-                    <Card
-                        title={item.title}
-                        imageUrl={item.images[0] && item.images[0].url}
-                        subTitle={"$" + item.price}
-                        onPress={() => navigation.navigate(routes.LISTING_DETAILS, item)}
-                        thumbnailUrl={item.images[0].thumbnailUrl}
-                    />
+            <Screen style={styles.screen}>
+                {error &&
+                    <React.Fragment>
+                        <AppText>Coulden't retrive the listing</AppText>
+                        <AppButton title="Try again" onPress={loadListings} />
+                    </React.Fragment>
                 }
-            />
-        </Screen>
+                <FlatList
+                    data={listings}
+                    keyExtractor={list => list._id.toString()}
+                    renderItem={({ item }) =>
+                        <Card
+                            title={item.title}
+                            imageUrl={item.images[0] && item.images[0].url}
+                            subTitle={"$" + item.price}
+                            onPress={() => navigation.navigate(routes.LISTING_DETAILS, item)}
+                            thumbnailUrl={item.images[0].thumbnailUrl}
+                        />
+                    }
+                />
+            </Screen>
+        </React.Fragment>
     );
 }
 
