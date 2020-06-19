@@ -3,15 +3,19 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import AppText from './AppText';
 
 import { Image } from "react-native-expo-image-cache"
+import AppButton from './AppButton';
 
-function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
+function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl, remove }) {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.card}>
                 <Image uri={imageUrl} style={styles.cardImg} preview={{ uri: thumbnailUrl }} tint="light" />
                 <View style={styles.container}>
-                    <AppText style={styles.title} numberOfLines={1}>{title}</AppText>
-                    <AppText style={styles.subTitle} numberOfLines={2}>{subTitle}</AppText>
+                    <View>
+                        <AppText style={styles.title} numberOfLines={1}>{title}</AppText>
+                        <AppText style={styles.subTitle} numberOfLines={2}>{subTitle}</AppText>
+                    </View>
+                    {remove && <AppButton title="Remove" onPress={onPress} />}
                 </View>
             </View>
         </TouchableOpacity>
@@ -30,7 +34,7 @@ const styles = StyleSheet.create({
         height: 200,
     },
     container: {
-        padding: 20
+        padding: 20,
     },
     subTitle: {
         color: "green",
@@ -38,7 +42,7 @@ const styles = StyleSheet.create({
     },
     title: {
         marginBottom: 8
-    }
+    },
 })
 
 export default Card;

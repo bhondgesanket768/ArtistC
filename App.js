@@ -7,6 +7,7 @@ import AuthNavigator from './app/navigation/AuthNavigator';
 import AuthContext from './app/auth/context';
 import authToken from "./app/auth/storage"
 import { AppLoading } from "expo"
+import { navigationRef } from "./app/navigation/RootNavigation"
 
 export default function App() {
 
@@ -25,7 +26,7 @@ export default function App() {
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       <OffLine />
-      <NavigationContainer theme={myTheme}>
+      <NavigationContainer ref={navigationRef} theme={myTheme}>
         {user ? <AppNavigator /> : <AuthNavigator />}
       </NavigationContainer>
     </AuthContext.Provider>

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Screen from "../components/Screen"
 import { View, StyleSheet, FlatList } from 'react-native';
 import Icon from '../components/Icon';
 import { ListItemSeparator, ListItems } from "../components/Lists"
 import routes from "../navigation/Routes"
 import useAuth from '../auth/useAuth';
+import AuthApi from "../api/auth"
+import listingApi from "../api/Listings"
 
 const menuItems = [
     {
@@ -12,7 +14,8 @@ const menuItems = [
         icon: {
             name: "format-list-bulleted",
             backgroundColor: "#ff5252"
-        }
+        },
+        targetScreen: routes.MY_LISTING,
     },
     {
         title: "My Messages",
@@ -27,6 +30,25 @@ const menuItems = [
 function MyAccountScreen({ navigation }) {
 
     const { user, logOut } = useAuth()
+    const [userData, setUserData] = useState();
+    const [userListing, setUserListing] = useState([]);
+
+    const getUsers = async () => {
+        const result = await AuthApi.getUser(user.userId)
+        if (!result.ok) return;
+        setUserData(result.data)
+    }
+
+    const getUserListing = async () => {
+        const result = await listingApi.getUserListing(user.userId)
+        if (!result.ok) return;
+        setUserListing(result.data)
+    }
+
+    useEffect(() => {
+        getUsers();
+        getUserListing()
+    }, [])
 
     return (
         <Screen style={styles.screen}>
@@ -34,7 +56,8 @@ function MyAccountScreen({ navigation }) {
                 <ListItems
                     title={user.name}
                     subTitle={user.email}
-                    image={require("../assets/profile.jpg")}
+                    image={userData && userData.profile}
+                    account
                 />
             </View>
             <View style={styles.userContainer}>
@@ -48,7 +71,13 @@ function MyAccountScreen({ navigation }) {
                             IconComponent={
                                 <Icon name={item.icon.name} backgroundColor={item.icon.backgroundColor} />
                             }
-                            onPress={() => navigation.navigate(item.targetScreen)}
+                            onPress={() => {
+                                if (item.title === "My Listings") {
+                                    navigation.navigate(item.targetScreen, userListing)
+                                } else {
+                                    navigation.navigate(item.targetScreen)
+                                }
+                            }}
                             isChevron
                         />
                     }
@@ -70,7 +99,7 @@ const styles = StyleSheet.create({
         marginVertical: 20,
     },
     screen: {
-        backgroundColor: "#f8f4f4" // need to change
+        backgroundColor: "#f8f4f4"
     }
 })
 

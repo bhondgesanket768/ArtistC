@@ -4,13 +4,13 @@ import AppText from '../AppText';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
-function ListItems({ image, title, subTitle, onPress, renderRightActions, IconComponent, isChevron }) {
+function ListItems({ image, title, subTitle, onPress, renderRightActions, IconComponent, isChevron, account }) {
     return (
         <Swipeable renderRightActions={renderRightActions}>
             <TouchableHighlight onPress={onPress} underlayColor="#f8f4f4" >
                 <View style={styles.container}>
                     {IconComponent}
-                    {image && <Image source={image} style={styles.image} />}
+                    {account ? <Image source={{ uri: image }} style={styles.image} /> : (image && <Image source={image} style={styles.image} />)}
                     <View style={styles.detailContainer}>
                         <AppText style={styles.title} numberOfLines={1}>{title}</AppText>
                         {subTitle && <AppText style={styles.subTitle} numberOfLines={2}>{subTitle}</AppText>}

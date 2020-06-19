@@ -3,12 +3,13 @@ import Screen from '../components/Screen';
 import * as Yup from "yup"
 import { AppForm, AppFormField, SubmitButton } from '../components/Form';
 import AppFormPicker from '../components/Form/AppFormPicker';
-import { StyleSheet } from "react-native"
+import { StyleSheet, ScrollView } from "react-native"
 import CategoryPickerItem from '../components/CategoryPickerItem';
 import FormImagePicker from '../components/Form/FormImagePicker';
 import useLocation from '../hooks/useLocation';
 import listingsApi from "../api/Listings"
 import UploadScreen from './UploadScreen';
+import useAuth from "../auth/useAuth"
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(1).label("Title"),
@@ -27,15 +28,18 @@ const categories = [
 
 function ListingEditScreen(props) {
 
+    const { user } = useAuth()
+
     const location = useLocation();
     const [progress, setProgress] = useState(0)
     const [progressVisible, setProgressvisible] = useState(false)
+    const [refreshing, setRefreshing] = useState(false)
 
     const handleSubmit = async (values, { resetForm }) => {
         setProgress(0)
         setProgressvisible(true)
         const result = await listingsApi.postListings(
-            { ...values, location },
+            { ...values, location, userId: user.userId },
             progress => setProgress(progress)
         )
         if (!result.ok) {
@@ -49,34 +53,36 @@ function ListingEditScreen(props) {
     return (
         <Screen style={styles.container}>
             <UploadScreen progress={progress} visible={progressVisible} done={() => setProgressvisible(false)} />
-            <AppForm
-                initialValues={{ title: "", price: "", description: "", category: null, images: [] }}
-                onSubmit={handleSubmit}
-                validationSchema={validationSchema}
-            >
-                <FormImagePicker name="images" />
-                <AppFormField
-                    name="title"
-                    placeholder="Title"
-                    maxLength={255}
-                />
-                <AppFormField
-                    keyboardType="numeric"
-                    maxLength={8}
-                    name="price"
-                    placeholder="Price"
-                    width="40%"
-                />
-                <AppFormPicker items={categories} name="category" placeholder="Category" width="50%" PickerItemComponent={CategoryPickerItem} numberOfColumns={3} />
-                <AppFormField
-                    name="description"
-                    placeholder="Description"
-                    maxLength={255}
-                    multiline
-                    numberOfLines={3}
-                />
-                <SubmitButton title="Post" />
-            </AppForm>
+            <ScrollView>
+                <AppForm
+                    initialValues={{ title: "", price: "", description: "", category: null, images: [] }}
+                    onSubmit={handleSubmit}
+                    validationSchema={validationSchema}
+                >
+                    <FormImagePicker name="images" />
+                    <AppFormField
+                        name="title"
+                        placeholder="Title"
+                        maxLength={255}
+                    />
+                    <AppFormField
+                        keyboardType="numeric"
+                        maxLength={8}
+                        name="price"
+                        placeholder="Price"
+                        width="40%"
+                    />
+                    <AppFormPicker items={categories} name="category" placeholder="Category" width="50%" PickerItemComponent={CategoryPickerItem} numberOfColumns={3} />
+                    <AppFormField
+                        name="description"
+                        placeholder="Description"
+                        maxLength={255}
+                        multiline
+                        numberOfLines={3}
+                    />
+                    <SubmitButton title="Post" />
+                </AppForm>
+            </ScrollView>
         </Screen>
     );
 }

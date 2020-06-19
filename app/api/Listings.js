@@ -3,8 +3,10 @@ import client from "./client"
 const getListings = () => client.get("/listings")
 
 const postListings = (listing, onUploadProgress) => {
+
     const data = new FormData()
     data.append("title", listing.title)
+    data.append("userId", listing.userId)
     data.append("price", listing.price)
     data.append("categoryId", listing.category.value)
     data.append("description", listing.description)
@@ -24,7 +26,17 @@ const postListings = (listing, onUploadProgress) => {
     })
 }
 
+const getUserListing = (userId) => {
+    return client.post("/listings/userListing", { userId })
+}
+
+const removeItem = (itemId) => {
+    return client.post("/listings/removeItem", { itemId })
+}
+
 export default {
     getListings,
-    postListings
+    postListings,
+    getUserListing,
+    removeItem
 }

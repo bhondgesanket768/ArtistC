@@ -7,21 +7,29 @@ import FeedNavigator from "./FeedNavigator";
 import AccountNavigator from "./AccountNavigator";
 import { Notifications } from "expo"
 import * as Permissions from "expo-permissions"
+import pushTokenApi from "../api/expoPushToken"
+import useAuth from "../auth/useAuth";
+import navigation from "../navigation/RootNavigation"
 
 const Tab = createBottomTabNavigator();
 const AppNavigator = () => {
 
+    const { user } = useAuth()
+
     useEffect(() => {
         registerPushNotification();
+        Notifications.addListener(notifcation => {
+            navigation.navigate("Account")
+        })
     }, [])
 
     const registerPushNotification = async () => {
         try {
-            const permission = Permissions.askAsync(Permissions.NOTIFICATIONS)
+            const permission = await Permissions.askAsync(Permissions.NOTIFICATIONS)
             if (!permission.granted) return
 
             const token = await Notifications.getExpoPushTokenAsync()
-            console.log(token)
+            pushTokenApi.register(token, user.email)
 
         } catch (error) {
             console.log("error in getting push token", error)

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Screen from '../components/Screen';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, RefreshControl } from 'react-native';
 import Card from '../components/Card';
 import routes from "../navigation/Routes"
 import listingApi from "../api/Listings"
@@ -12,10 +12,17 @@ import useApi from '../hooks/useApi';
 function ListingsScreen({ navigation }) {
 
     const { data: listings, error, loading, request: loadListings } = useApi(listingApi.getListings)
+    const [refreshing, setRefreshing] = useState(false)
 
     useEffect(() => {
         loadListings()
     }, [])
+
+    const onRefresh = () => {
+        setRefreshing(true)
+        loadListings()
+        setRefreshing(false)
+    }
 
     return (
         <React.Fragment>
@@ -39,6 +46,7 @@ function ListingsScreen({ navigation }) {
                             thumbnailUrl={item.images[0].thumbnailUrl}
                         />
                     }
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 />
             </Screen>
         </React.Fragment>
