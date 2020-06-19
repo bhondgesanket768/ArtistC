@@ -8,6 +8,8 @@ import messagesApi from "../api/messages"
 import AppText from '../components/AppText';
 import { useNavigation } from '@react-navigation/native';
 import routes from "../navigation/Routes"
+import useApi from "../hooks/useApi"
+import ActivityIndicator from "../components/ActivityIndicator"
 
 function MessagesScreen(props) {
 
@@ -15,22 +17,17 @@ function MessagesScreen(props) {
 
     const navigation = useNavigation();
 
-    const [msgList, setMsgList] = useState([]);
+    const { data: msgList, error, loading, request: loadListings } = useApi(messagesApi.getMessages)
+
     const [refreshing, setRefreshing] = useState(false);
 
-    const getMessages = async () => {
-        const result = await messagesApi.getMessages(user.userId);
-        if (!result.ok) return;
-        setMsgList(result.data)
-    }
-
     useEffect(() => {
-        getMessages()
+        loadListings(user.userId)
     }, [])
 
     const onRefresh = () => {
         setRefreshing(true)
-        getMessages()
+        loadListings(user.userId)
         setRefreshing(false)
     }
 
@@ -42,7 +39,7 @@ function MessagesScreen(props) {
             ])
             return;
         }
-        getMessages();
+        loadListings(user.userId)
         Alert.alert("Success", "Message deleted successfully", [
             { text: "Ok" }
         ])
@@ -50,26 +47,24 @@ function MessagesScreen(props) {
 
     return (
         <Screen>
-            {msgList.length > 0 ? (
-                <FlatList
-                    data={msgList}
-                    keyExtractor={msg => msg._id.toString()}
-                    renderItem={({ item }) => <ListItems title={item.senderName}
-                        image={item.senderProfile}
-                        subTitle={item.content}
-                        onPress={() => navigation.navigate(routes.REPLAY, item)}
-                        renderRightActions={() => <ListItemsDelete onPress={() => handleDelete(item)} />}
-                        isChevron
-                        account
-                    />}
-                    ItemSeparatorComponent={ListItemSeparator}
-                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                />
-            ) : (
-                    <View style={styles.empty}>
-                        <AppText>Your message list is empty</AppText>
-                    </View>
-                )}
+            <ActivityIndicator visible={loading} />
+            {!loading && msgList.length === 0 && <View style={styles.empty}>
+                <AppText>Your message list is empty</AppText>
+            </View>}
+            <FlatList
+                data={msgList}
+                keyExtractor={msg => msg._id.toString()}
+                renderItem={({ item }) => <ListItems title={item.senderName}
+                    image={item.senderProfile}
+                    subTitle={item.content}
+                    onPress={() => navigation.navigate(routes.REPLAY, item)}
+                    renderRightActions={() => <ListItemsDelete onPress={() => handleDelete(item)} />}
+                    isChevron
+                    account
+                />}
+                ItemSeparatorComponent={ListItemSeparator}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            />
         </Screen >
     );
 }

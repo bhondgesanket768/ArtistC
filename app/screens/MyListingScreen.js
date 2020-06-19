@@ -5,28 +5,33 @@ import Screen from '../components/Screen';
 import AppText from '../components/AppText';
 import listingApi from "../api/Listings"
 import useAuth from "../auth/useAuth"
+import useApi from "../hooks/useApi"
+import ActivityIndicator from "../components/ActivityIndicator"
 
 function MyListingScreen({ route }) {
 
     const { user } = useAuth()
 
-    const [listing, setUserListing] = useState([]);
+    const { data: listing, error, loading, request: getUserListing } = useApi(listingApi.getUserListing)
+
+    //const [listing, setUserListing] = useState([]);
     const [refreshing, setRefreshing] = useState(false)
     const [toggle, setToggle] = useState(false)
 
+    /*
     const getUserListing = async () => {
         const result = await listingApi.getUserListing(user.userId)
         if (!result.ok) return;
         setUserListing(result.data)
-    }
+    }*/
 
     useEffect(() => {
-        getUserListing()
+        getUserListing(user.userId)
     }, [toggle])
 
     const onRefresh = () => {
         setRefreshing(true)
-        getUserListing();
+        getUserListing(user.userId);
         setRefreshing(false)
     }
 
@@ -47,8 +52,14 @@ function MyListingScreen({ route }) {
     }
 
     return (
-        <Screen style={styles.container}>
-            {listing.length > 0 ? (
+        <React.Fragment>
+            <ActivityIndicator visible={loading} />
+            <Screen style={styles.container}>
+                {!loading && listing.length === 0 &&
+                    <View style={styles.message}>
+                        <AppText>Your Don't have any listings...</AppText>
+                    </View>
+                }
                 <FlatList
                     data={listing}
                     keyExtractor={list => list._id.toString()}
@@ -64,14 +75,8 @@ function MyListingScreen({ route }) {
                     }
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 />
-            ) : (
-                    <View style={styles.message}>
-                        <AppText>Your Don't have any listings...</AppText>
-                    </View>
-
-                )}
-
-        </Screen>
+            </Screen>
+        </React.Fragment>
     );
 }
 

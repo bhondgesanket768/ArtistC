@@ -3,13 +3,15 @@ import Screen from '../components/Screen';
 import * as Yup from "yup"
 import { AppForm, AppFormField, SubmitButton } from '../components/Form';
 import AppFormPicker from '../components/Form/AppFormPicker';
-import { StyleSheet, ScrollView } from "react-native"
+import { StyleSheet, ScrollView, View } from "react-native"
 import CategoryPickerItem from '../components/CategoryPickerItem';
 import FormImagePicker from '../components/Form/FormImagePicker';
 import useLocation from '../hooks/useLocation';
 import listingsApi from "../api/Listings"
 import UploadScreen from './UploadScreen';
 import useAuth from "../auth/useAuth"
+import AppText from '../components/AppText';
+import routes from "../navigation/Routes"
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(1).label("Title"),
@@ -26,14 +28,13 @@ const categories = [
     { label: "others", value: 4, backgroundColor: "blue", icon: "application" },
 ]
 
-function ListingEditScreen(props) {
+function ListingEditScreen({ navigation }) {
 
     const { user } = useAuth()
 
     const location = useLocation();
     const [progress, setProgress] = useState(0)
     const [progressVisible, setProgressvisible] = useState(false)
-    const [refreshing, setRefreshing] = useState(false)
 
     const handleSubmit = async (values, { resetForm }) => {
         setProgress(0)
@@ -46,7 +47,7 @@ function ListingEditScreen(props) {
             setProgressvisible(false)
             return alert("Could not able to save your post")
         }
-
+        navigation.navigate(routes.FEEDS)
         resetForm()
     }
 
@@ -54,6 +55,9 @@ function ListingEditScreen(props) {
         <Screen style={styles.container}>
             <UploadScreen progress={progress} visible={progressVisible} done={() => setProgressvisible(false)} />
             <ScrollView>
+                <View style={styles.heading}>
+                    <AppText style={styles.text}> Add your listings </AppText>
+                </View>
                 <AppForm
                     initialValues={{ title: "", price: "", description: "", category: null, images: [] }}
                     onSubmit={handleSubmit}
@@ -90,6 +94,15 @@ function ListingEditScreen(props) {
 const styles = StyleSheet.create({
     container: {
         padding: 10
+    },
+    heading: {
+        justifyContent: "center",
+        alignItems: "center",
+        marginVertical: 20
+    },
+    text: {
+        fontSize: 24,
+        fontWeight: "500"
     }
 })
 

@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 import AppText from './AppText';
 import Screen from './Screen';
 import PickerItem from './PickerItem';
+import AppButton from './AppButton';
 
 function AppPicker({ icon, placeholder, items, selected, onSelectItem, width = "100%", PickerItemComponent = PickerItem, numberOfColumns = 1 }) {
 
@@ -23,7 +24,9 @@ function AppPicker({ icon, placeholder, items, selected, onSelectItem, width = "
                 </View>
             </TouchableWithoutFeedback>
             <Modal visible={modalVisible} animationType="fade" >
-                <Button title="close" onPress={() => setModalVisible(false)} />
+                <View style={styles.button}>
+                    <AppButton title="close" onPress={() => setModalVisible(false)} />
+                </View>
                 <FlatList
                     data={items}
                     keyExtractor={item => item.value.toString()}
@@ -59,6 +62,9 @@ const styles = StyleSheet.create({
     placeholder: {
         color: "#6e6969",
         flex: 1
+    },
+    button: {
+        padding: 20
     }
 })
 

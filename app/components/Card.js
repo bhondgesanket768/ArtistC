@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     },
     cardImg: {
         width: "100%",
-        height: 200,
+        height: 230,
     },
     container: {
         padding: 20,

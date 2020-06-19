@@ -9,6 +9,8 @@ import listingApi from "../api/Listings"
 import { useNavigation } from '@react-navigation/native';
 import routes from "../navigation/Routes"
 
+const category = ["Sketchs", "Paintings", "Craft work", "others"]
+
 function ListingDetailsScreen({ route }) {
 
     const listing = route.params
@@ -46,7 +48,9 @@ function ListingDetailsScreen({ route }) {
                 <Image style={styles.image} uri={listing.images[0].url} preview={{ uri: listing.images[0].thumbnailUrl }} tint="light" />
                 <View style={styles.container}>
                     <AppText style={styles.title}>{listing.title}</AppText>
-                    <AppText style={styles.price}>{listing.price}</AppText>
+                    <AppText style={styles.description}>{listing.description}</AppText>
+                    <AppText style={styles.category}>{`Category : ${category[listing.categoryId - 1]}`}</AppText>
+                    <AppText style={styles.price}>{`$ ${listing.price}`}</AppText>
                     <View style={styles.userContainer}>
                         <ListItems
                             image={user ? user.profile : " "}
@@ -74,7 +78,10 @@ const styles = StyleSheet.create({
         height: 300
     },
     container: {
-        padding: 20
+        padding: 20,
+    },
+    category: {
+        paddingTop: 5
     },
     title: {
         fontSize: 24,
@@ -85,9 +92,11 @@ const styles = StyleSheet.create({
         color: "green",
         fontWeight: "bold",
         fontSize: 20,
+        paddingTop: 5
     },
     userContainer: {
-        marginVertical: 40,
+        marginVertical: 20,
+        width: "100%",
     },
     contact: {
         padding: 10,
