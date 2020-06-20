@@ -15,8 +15,11 @@ export default useApi = (apiFunc) => {
             return response
         }
         setError(false)
-        setData(response.data.reverse())
-
+        if (Array.isArray(response.data)) {
+            setData(response.data.reverse())
+        } else {
+            setData(response.data)
+        }
         return response
     }
 

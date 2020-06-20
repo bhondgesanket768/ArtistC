@@ -6,7 +6,7 @@ import routes from "../navigation/Routes"
 function WelcomeScreen({ navigation }) {
 
     return (
-        <ImageBackground source={require("../assets/background.jpg")} style={styles.background} blurRadius={1}>
+        <ImageBackground source={require("../assets/background.jpg")} style={styles.background}>
             <View style={styles.container}>
                 <Image source={require("../assets/logo.png")} style={styles.logo} />
                 <Text style={styles.tagLine}>Sell your artistic work here</Text>
