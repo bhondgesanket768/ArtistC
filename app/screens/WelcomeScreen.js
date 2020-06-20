@@ -8,7 +8,7 @@ function WelcomeScreen({ navigation }) {
     return (
         <ImageBackground source={require("../assets/background.jpg")} style={styles.background} blurRadius={1}>
             <View style={styles.container}>
-                <Image source={require("../assets/logo-red.png")} style={styles.logo} />
+                <Image source={require("../assets/logo.png")} style={styles.logo} />
                 <Text style={styles.tagLine}>Sell your artistic work here</Text>
             </View>
             <View style={styles.buttonContainer}>
@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     logo: {
-        width: 100,
-        height: 100,
+        width: 150,
+        height: 150,
     },
     container: {
         position: "absolute",
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     tagLine: {
         fontSize: 25,
         fontWeight: "600",
-        paddingVertical: 20
+        paddingVertical: 10
     }
 })
 
