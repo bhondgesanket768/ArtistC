@@ -3,7 +3,7 @@ import Screen from '../components/Screen';
 import * as Yup from "yup"
 import { AppForm, AppFormField, SubmitButton } from '../components/Form';
 import AppFormPicker from '../components/Form/AppFormPicker';
-import { StyleSheet, ScrollView, View } from "react-native"
+import { StyleSheet, ScrollView, View, Alert } from "react-native"
 import CategoryPickerItem from '../components/CategoryPickerItem';
 import FormImagePicker from '../components/Form/FormImagePicker';
 import useLocation from '../hooks/useLocation';
@@ -11,7 +11,6 @@ import listingsApi from "../api/Listings"
 import UploadScreen from './UploadScreen';
 import useAuth from "../auth/useAuth"
 import AppText from '../components/AppText';
-import routes from "../navigation/Routes"
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(1).label("Title"),
@@ -28,7 +27,7 @@ const categories = [
     { label: "others", value: 4, backgroundColor: "blue", icon: "application" },
 ]
 
-function ListingEditScreen({ navigation }) {
+function ListingEditScreen() {
 
     const { user } = useAuth()
 
@@ -47,8 +46,8 @@ function ListingEditScreen({ navigation }) {
             setProgressvisible(false)
             return alert("Could not able to save your post")
         }
-        navigation.navigate(routes.FEEDS)
         resetForm()
+        Alert.alert("Success", "Your listing added successfully")
     }
 
     return (

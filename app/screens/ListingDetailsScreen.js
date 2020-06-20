@@ -45,7 +45,7 @@ function ListingDetailsScreen({ route }) {
             keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
             <ScrollView>
-                <Image style={styles.image} uri={listing.images[0].url} preview={{ uri: listing.images[0].thumbnailUrl }} tint="light" />
+                <Image style={styles.image} uri={listing.data ? listing.data.url : listing.images[0].url} preview={{ uri: listing.data ? listing.data.thumbnailUrl : listing.images[0].thumbnailUrl }} tint="light" />
                 <View style={styles.container}>
                     <AppText style={styles.title}>{listing.title}</AppText>
                     <AppText style={styles.description}>{listing.description}</AppText>
@@ -75,7 +75,7 @@ function ListingDetailsScreen({ route }) {
 const styles = StyleSheet.create({
     image: {
         width: "100%",
-        height: 300
+        height: 300,
     },
     container: {
         padding: 20,

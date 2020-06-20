@@ -14,16 +14,8 @@ function MyListingScreen({ route }) {
 
     const { data: listing, error, loading, request: getUserListing } = useApi(listingApi.getUserListing)
 
-    //const [listing, setUserListing] = useState([]);
     const [refreshing, setRefreshing] = useState(false)
     const [toggle, setToggle] = useState(false)
-
-    /*
-    const getUserListing = async () => {
-        const result = await listingApi.getUserListing(user.userId)
-        if (!result.ok) return;
-        setUserListing(result.data)
-    }*/
 
     useEffect(() => {
         getUserListing(user.userId)
@@ -35,8 +27,8 @@ function MyListingScreen({ route }) {
         setRefreshing(false)
     }
 
-    const removeitem = async (item) => {
-        const result = await listingApi.removeItem(item._id);
+    const removeitem = async (item, dataId) => {
+        const result = await listingApi.removeItem(item._id, dataId);
         if (!result.ok) return
         setToggle(!toggle)
         Alert.alert("Success", "Your posting Deleted successfully", [
@@ -44,9 +36,9 @@ function MyListingScreen({ route }) {
         ])
     }
 
-    const handleRemove = (item) => {
+    const handleRemove = (item, dataId) => {
         Alert.alert("Delete", "Are you sure, This will remove your posting ?", [
-            { text: "Yes", onPress: () => removeitem(item) },
+            { text: "Yes", onPress: () => removeitem(item, dataId) },
             { text: "No" }
         ])
     }
@@ -64,14 +56,18 @@ function MyListingScreen({ route }) {
                     data={listing}
                     keyExtractor={list => list._id.toString()}
                     renderItem={({ item }) =>
-                        <Card
-                            title={item.title}
-                            imageUrl={item.images[0].url}
-                            subTitle={"$" + item.price}
-                            thumbnailUrl={item.images[0].thumbnailUrl}
-                            remove
-                            onPress={() => handleRemove(item)}
-                        />
+                        item.images.map((data, index) => (
+                            <View key={index}>
+                                <Card
+                                    title={item.title}
+                                    imageUrl={data.url}
+                                    subTitle={"$" + item.price}
+                                    thumbnailUrl={data.thumbnailUrl}
+                                    remove
+                                    onPress={() => handleRemove(item, data._id)}
+                                />
+                            </View>
+                        ))
                     }
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 />

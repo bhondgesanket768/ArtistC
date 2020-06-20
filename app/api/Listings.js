@@ -30,8 +30,8 @@ const getUserListing = (userId) => {
     return client.post("/listings/userListing", { userId })
 }
 
-const removeItem = (itemId) => {
-    return client.post("/listings/removeItem", { itemId })
+const removeItem = (itemId, imageId) => {
+    return client.post("/listings/removeItem", { itemId, imageId })
 }
 
 export default {

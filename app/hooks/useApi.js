@@ -15,7 +15,7 @@ export default useApi = (apiFunc) => {
             return response
         }
         setError(false)
-        setData(response.data)
+        setData(response.data.reverse())
 
         return response
     }
