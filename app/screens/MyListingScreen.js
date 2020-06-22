@@ -73,7 +73,9 @@ function MyListingScreen({ route }) {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 5,
         backgroundColor: "#f8f4f4"
     },
     message: {
