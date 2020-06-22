@@ -8,6 +8,7 @@ import AuthApi from "../api/auth"
 import listingApi from "../api/Listings"
 import { useNavigation } from '@react-navigation/native';
 import routes from "../navigation/Routes"
+import MapView from 'react-native-maps';
 
 const category = ["Sketchs", "Paintings", "Craft work", "others"]
 
@@ -39,36 +40,54 @@ function ListingDetailsScreen({ route }) {
         getUserListing();
     }, [])
 
+    const coords = {
+        latitude: listing.location ? listing.location.latitude : "",
+        longitude: listing.location ? listing.location.longitude : "",
+    }
+
     return (
-        <KeyboardAvoidingView
-            behavior="position"
-            keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-        >
-            <ScrollView>
-                <Image style={styles.image} uri={listing.data ? listing.data.url : listing.images[0].url} preview={{ uri: listing.data ? listing.data.thumbnailUrl : listing.images[0].thumbnailUrl }} tint="light" />
-                <View style={styles.container}>
-                    <AppText style={styles.title}>{listing.title}</AppText>
-                    <AppText style={styles.description}>{listing.description}</AppText>
-                    <AppText style={styles.category}>{`Category : ${category[listing.categoryId - 1]}`}</AppText>
-                    <AppText style={styles.price}>{`$ ${listing.price}`}</AppText>
-                    <View style={styles.userContainer}>
-                        <ListItems
-                            image={user ? user.profile : " "}
-                            title={user ? user.name : " "}
-                            subTitle={`${totalListings} listings`}
-                            isChevron
-                            account
-                            onPress={() => navigation.navigate(routes.SELLER_lISTING, userListing)}
-                        />
-                    </View>
-                    <View style={styles.contact}>
-                        <AppText>Seller Contact : </AppText>
-                        <AppText style={styles.no}>{user ? user.phone : " "}</AppText>
-                    </View>
-                    <ContactSellerForm listing={listing} />
+        <ScrollView>
+            <Image style={styles.image} uri={listing.images} tint="light" />
+            <View style={styles.container}>
+                <AppText style={styles.title}>{listing.title}</AppText>
+                {listing.description !== "" && <AppText style={styles.description}>{listing.description}</AppText>}
+                <AppText style={styles.category}>{`Category : ${category[listing.categoryId - 1]}`}</AppText>
+                <AppText style={styles.price}>{`$ ${listing.price}`}</AppText>
+                <View style={styles.userContainer}>
+                    <ListItems
+                        image={user ? user.profile : " "}
+                        title={user ? user.name : " "}
+                        subTitle={`${totalListings} listings`}
+                        isChevron
+                        account
+                        onPress={() => navigation.navigate(routes.SELLER_lISTING, userListing)}
+                    />
                 </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                <View style={styles.contact}>
+                    <AppText>Seller Contact : </AppText>
+                    <AppText style={styles.no}>{user ? user.phone : " "}</AppText>
+                </View>
+                <ContactSellerForm listing={listing} />
+            </View>
+            {listing.location &&
+                <View>
+                    <AppText style={styles.text}>Seller Posting location</AppText>
+                    <MapView style={styles.mapStyle}
+                        region={{
+                            latitude: listing.location.latitude,
+                            longitude: listing.location.longitude,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421
+                        }}
+                    >
+                        <MapView.Marker
+                            key={1}
+                            coordinate={coords}
+                        />
+                    </MapView>
+                </View>
+            }
+        </ScrollView>
     );
 }
 
@@ -97,6 +116,8 @@ const styles = StyleSheet.create({
     userContainer: {
         marginVertical: 20,
         width: "100%",
+        borderColor: "black",
+        borderWidth: 1
     },
     contact: {
         padding: 10,
@@ -104,6 +125,13 @@ const styles = StyleSheet.create({
     },
     no: {
         fontWeight: "600"
+    },
+    mapStyle: {
+        width: "100%",
+        height: 300
+    },
+    text: {
+        padding: 20,
     }
 })
 

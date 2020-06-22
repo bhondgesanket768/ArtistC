@@ -38,16 +38,43 @@ function ListingEditScreen() {
     const handleSubmit = async (values, { resetForm }) => {
         setProgress(0)
         setProgressvisible(true)
-        const result = await listingsApi.postListings(
-            { ...values, location, userId: user.userId },
-            progress => setProgress(progress)
-        )
-        if (!result.ok) {
-            setProgressvisible(false)
-            return alert("Could not able to save your post")
-        }
-        resetForm()
-        Alert.alert("Success", "Your listing added successfully")
+
+        values.images.forEach((image) => {
+
+            let newFile = { uri: image, type: `test/${image.split(".")[1]}`, name: `test/${image.split(".")[1]}` }
+            const newData = new FormData()
+            newData.append("file", newFile)
+            newData.append("upload_preset", "artistApp")
+            newData.append("cloud_name", "artistc")
+
+            fetch("https://api.cloudinary.com/v1_1/artistc/image/upload", {
+                method: "post",
+                body: newData
+            })
+                .then(response => response.json())
+                .then(async data => {
+                    let value = {
+                        title: values.title,
+                        price: values.price,
+                        categoryId: values.category.value,
+                        description: values.description,
+                        image: data.url
+                    }
+
+                    const result = await listingsApi.postListings(
+                        { ...value, location: JSON.stringify(location), userId: user.userId },
+                        progress => setProgress(progress)
+                    )
+
+                    if (!result.ok) {
+                        setProgressvisible(false)
+                        return alert("Could not able to save your post")
+                    }
+
+                    resetForm()
+                    Alert.alert("Success", "Your listing added successfully")
+                })
+        })
     }
 
     return (
@@ -72,7 +99,7 @@ function ListingEditScreen() {
                         keyboardType="numeric"
                         maxLength={8}
                         name="price"
-                        placeholder="Price"
+                        placeholder="Price in $"
                         width="40%"
                     />
                     <AppFormPicker items={categories} name="category" placeholder="Category" width="50%" PickerItemComponent={CategoryPickerItem} numberOfColumns={3} />

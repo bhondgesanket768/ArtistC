@@ -46,10 +46,9 @@ function ListingsScreen({ navigation }) {
                         renderItem={({ item }) =>
                             <Card
                                 title={item.title}
-                                imageUrl={item.images[0] && item.images[0].url}
+                                imageUrl={item.images}
                                 subTitle={"$" + item.price}
                                 onPress={() => navigation.navigate(routes.LISTING_DETAILS, item)}
-                                thumbnailUrl={item.images[0].thumbnailUrl}
                             />
                         }
                         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -63,7 +62,8 @@ function ListingsScreen({ navigation }) {
 const styles = StyleSheet.create({
     screen: {
         padding: 20,
-        paddingTop: 30,
+        paddingTop: -5,
+        paddingBottom: -20,
         backgroundColor: "#f8f4f4"
     },
     empty: {
@@ -75,6 +75,13 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 24,
         fontWeight: "600"
+    },
+    menu: {
+        flex: 1,
+        paddingTop: 40
+    },
+    heading: {
+        fontSize: 24
     }
 })
 

@@ -27,7 +27,9 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         backgroundColor: "white",
         marginBottom: 20,
-        overflow: "hidden"
+        overflow: "hidden",
+        borderColor: "black",
+        borderWidth: 1
     },
     cardImg: {
         width: "100%",

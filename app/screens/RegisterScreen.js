@@ -24,27 +24,49 @@ function RegisterScreen(props) {
     const { logIn } = useAuth()
     const registerApi = useApi(AuthApi.register)
     const loginApi = useApi(AuthApi.login)
+    const [externalLoading, setExternalLoading] = useState(false)
 
     const handleRegister = async (userInfo) => {
-        const result = await registerApi.request(userInfo)
-        if (!result.ok) {
-            setError(true)
-            if (result.data) {
-                setErrMsg(result.data.error)
-            } else {
-                setErrMsg("An unexpected error occured");
-            }
-            return
-        }
-        setError(false);
-        const { data: authToken } = await loginApi.request(userInfo.email, userInfo.password)
-        logIn(authToken)
+
+        setExternalLoading(true);
+
+        let newFile = { uri: userInfo.profile, type: `test/${userInfo.profile.split(".")[1]}`, name: `test/${userInfo.profile.split(".")[1]}` }
+        const newData = new FormData()
+        newData.append("file", newFile)
+        newData.append("upload_preset", "artistApp")
+        newData.append("cloud_name", "artistc")
+
+        fetch("https://api.cloudinary.com/v1_1/artistc/image/upload", {
+            method: "post",
+            body: newData
+        }).then(response => response.json())
+            .then(async data => {
+                const value = Object.assign({}, userInfo, { profile: data.url })
+
+                const result = await registerApi.request(value)
+
+                setExternalLoading(false);
+
+                if (!result.ok) {
+                    setError(true)
+                    if (result.data) {
+                        setErrMsg(result.data.error)
+                    } else {
+                        setErrMsg("An unexpected error occured");
+                    }
+                    return
+                }
+
+                setError(false);
+                const { data: authToken } = await loginApi.request(userInfo.email, userInfo.password)
+                logIn(authToken)
+            })
     }
 
     return (
         <React.Fragment>
             <ImageBackground source={require("../assets/login.jpg")} style={styles.background} blurRadius={1}>
-                <ActivityIndicator visible={registerApi.loading || loginApi.loading} />
+                <ActivityIndicator visible={registerApi.loading || loginApi.loading || externalLoading} />
                 <Screen style={styles.container}>
                     <ScrollView>
                         <AppForm

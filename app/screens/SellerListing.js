@@ -21,17 +21,12 @@ function SellerListing({ route }) {
                 data={list}
                 keyExtractor={list => list._id.toString()}
                 renderItem={({ item }) =>
-                    item.images.map((data, index) => (
-                        <View key={index}>
-                            <Card
-                                title={item.title}
-                                imageUrl={data.url}
-                                subTitle={"$" + item.price}
-                                onPress={() => navigation.navigate(routes.LISTING_DETAILS, { ...item, data })}
-                                thumbnailUrl={data.thumbnailUrl}
-                            />
-                        </View>
-                    ))
+                    <Card
+                        title={item.title}
+                        imageUrl={item.images}
+                        subTitle={"$" + item.price}
+                        onPress={() => navigation.navigate(routes.LISTING_DETAILS, item)}
+                    />
                 }
             />
         </Screen>
