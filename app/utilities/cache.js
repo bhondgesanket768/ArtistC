@@ -1,5 +1,5 @@
 import { AsyncStorage } from "react-native"
-import moment from "moment"
+import dayjs from "dayjs"
 
 const expiry = 5;
 
@@ -22,9 +22,9 @@ const get = async (key) => {
 
         if (!data) return null
 
-        const time = moment(Date.now())
-        const storedTime = moment(data.timeStamp)
-        const isExpired = time.diff(storedTime, "minutes") > expiry
+        const time = dayjs()
+        const storedTime = dayjs(data.timeStamp)
+        const isExpired = time.diff(storedTime, "minute") > expiry
 
         if (isExpired) {
             await AsyncStorage.removeItem(key)
