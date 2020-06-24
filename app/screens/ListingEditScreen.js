@@ -75,7 +75,7 @@ function ListingEditScreen() {
         setTimeout(() => {
             resetForm()
             Alert.alert("Success", "Your listing added successfully")
-        }, 2000)
+        }, 3000)
     }
 
     return (

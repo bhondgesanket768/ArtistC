@@ -1,9 +1,8 @@
 import React from 'react';
-import { Alert, Keyboard } from 'react-native';
+import { Alert } from 'react-native';
 import { AppForm, AppFormField, SubmitButton } from './Form';
 import * as Yup from "yup"
 import messagesApi from "../api/messages"
-import { Notifications } from "expo";
 import useAuth from '../auth/useAuth';
 
 const validationSchema = Yup.object().shape({
@@ -17,7 +16,6 @@ function ContactSellerForm({ listing, replay }) {
     const data = replay ? listing.listingId : listing._id
 
     const handleSubmit = async ({ message }, { resetForm }) => {
-        Keyboard.dismiss();
 
         var result;
         if (replay) {
@@ -39,11 +37,6 @@ function ContactSellerForm({ listing, replay }) {
             Alert.alert("Awesome", "Your message is sent to the seller.")
         }
 
-        /*
-        Notifications.presentLocalNotificationAsync({
-            title: "Awesome!",
-            body: "Your message is sent to the seller.",
-        });*/
     };
 
     return (
