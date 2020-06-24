@@ -36,6 +36,8 @@ function SellerListing({ route }) {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
+        paddingTop: 3,
+        paddingBottom: -20,
         backgroundColor: "#f8f4f4"
     },
 });

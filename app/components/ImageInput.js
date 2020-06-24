@@ -3,7 +3,7 @@ import { View, StyleSheet, Image, TouchableWithoutFeedback, Alert } from 'react-
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import * as ImagePicker from "expo-image-picker"
 
-function ImageInput({ imageUri, onChangeImage }) {
+function ImageInput({ imageUri, onChangeImage, profile }) {
 
     useEffect(() => {
         requestPermission()
@@ -43,7 +43,7 @@ function ImageInput({ imageUri, onChangeImage }) {
 
     return (
         <TouchableWithoutFeedback onPress={handlePress}>
-            <View style={styles.container}>
+            <View style={profile ? [styles.container, { borderRadius: 55 }] : styles.container}>
                 {imageUri ? <Image source={{ uri: imageUri }} style={styles.image} /> : <MaterialCommunityIcons name="camera" color="white" size={30} />}
             </View>
         </TouchableWithoutFeedback>

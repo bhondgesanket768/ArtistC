@@ -70,11 +70,12 @@ function ListingEditScreen() {
                         setProgressvisible(false)
                         return alert("Could not able to save your post")
                     }
-
-                    resetForm()
-                    Alert.alert("Success", "Your listing added successfully")
                 })
         })
+        setTimeout(() => {
+            resetForm()
+            Alert.alert("Success", "Your listing added successfully")
+        }, 2000)
     }
 
     return (
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     heading: {
         justifyContent: "center",
         alignItems: "center",
-        marginVertical: 20
+        marginVertical: 20,
     },
     text: {
         fontSize: 24,

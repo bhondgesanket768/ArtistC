@@ -15,7 +15,11 @@ function ListingsScreen({ navigation }) {
     const [refreshing, setRefreshing] = useState(false)
 
     useEffect(() => {
-        loadListings()
+        let mounted = true;
+        if (mounted) {
+            loadListings()
+        }
+        return () => mounted = false;
     }, [])
 
     const onRefresh = () => {

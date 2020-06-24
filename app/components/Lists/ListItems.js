@@ -4,7 +4,7 @@ import AppText from '../AppText';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
-function ListItems({ image, title, subTitle, onPress, renderRightActions, IconComponent, isChevron, account }) {
+function ListItems({ image, title, subTitle, onPress, renderRightActions, IconComponent, isChevron, account, onEditPress, accountEdit }) {
     return (
         <Swipeable renderRightActions={renderRightActions}>
             <TouchableHighlight onPress={onPress} underlayColor="#f8f4f4" >
@@ -15,6 +15,11 @@ function ListItems({ image, title, subTitle, onPress, renderRightActions, IconCo
                         <AppText style={styles.title} numberOfLines={1}>{title}</AppText>
                         {subTitle && <AppText style={styles.subTitle} numberOfLines={2}>{subTitle}</AppText>}
                     </View>
+                    <TouchableHighlight onPress={onEditPress} underlayColor="#f8f4f4">
+                        <View style={styles.edit}>
+                            {accountEdit && <MaterialCommunityIcons name="border-color" size={35} color="grey" />}
+                        </View>
+                    </TouchableHighlight>
                     {isChevron &&
                         <View style={styles.chevron}>
                             <MaterialCommunityIcons name="chevron-right" size={20} color="#6e6969" />
@@ -50,6 +55,11 @@ const styles = StyleSheet.create({
     },
     chevron: {
         alignSelf: "center"
+    },
+    edit: {
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: 20
     }
 })
 

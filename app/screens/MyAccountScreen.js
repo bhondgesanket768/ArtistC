@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Screen from "../components/Screen"
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Alert } from 'react-native';
 import Icon from '../components/Icon';
 import { ListItemSeparator, ListItems } from "../components/Lists"
 import routes from "../navigation/Routes"
 import useAuth from '../auth/useAuth';
 import AuthApi from "../api/auth"
 import listingApi from "../api/Listings"
+import ActivityIndicator from '../components/ActivityIndicator';
 
 const menuItems = [
     {
@@ -27,7 +28,7 @@ const menuItems = [
     }
 ]
 
-function MyAccountScreen({ navigation }) {
+function MyAccountScreen({ navigation, route }) {
 
     const { user, logOut } = useAuth()
     const [userData, setUserData] = useState();
@@ -46,51 +47,85 @@ function MyAccountScreen({ navigation }) {
     }
 
     useEffect(() => {
-        getUsers();
-        getUserListing()
-    }, [])
+        let mounted = true
+        if (mounted) {
+            getUsers();
+            getUserListing()
+        }
+        return () => mounted = false
+    }, [route.params])
+
+    const removeUser = async (userId) => {
+        const result = await AuthApi.deleteAccount(userId)
+        if (!result.ok) {
+            Alert.alert("Error", "Could not able to delete your account, something went wrong")
+        }
+        logOut();
+        Alert.alert("Success", "Account deleted successfully")
+    }
+
+    const handleDelete = () => {
+        Alert.alert("Deleting", "Are you sure you want to delete your account", [
+            { text: "Yes", onPress: () => removeUser(user.userId) },
+            { text: "No" }
+        ])
+    }
 
     return (
-        <Screen style={styles.screen}>
-            <View style={styles.userContainer}>
-                <ListItems
-                    title={user.name}
-                    subTitle={user.email}
-                    image={userData && userData.profile}
-                    account
-                />
-            </View>
-            <View style={styles.userContainer}>
-                <FlatList
-                    data={menuItems}
-                    keyExtractor={menuItem => menuItem.title}
-                    ItemSeparatorComponent={ListItemSeparator}
-                    renderItem={({ item }) =>
-                        <ListItems
-                            title={item.title}
-                            IconComponent={
-                                <Icon name={item.icon.name} backgroundColor={item.icon.backgroundColor} />
-                            }
-                            onPress={() => {
-                                if (item.title === "My Listings") {
-                                    navigation.navigate(item.targetScreen, userListing)
-                                } else {
-                                    navigation.navigate(item.targetScreen)
+        <React.Fragment>
+            <ActivityIndicator visible={!userData} />
+            <Screen style={styles.screen}>
+                <View style={styles.userContainer}>
+                    <ListItems
+                        title={userData && userData.name}
+                        subTitle={userData && userData.email}
+                        image={userData && userData.profile}
+                        account
+                        accountEdit
+                        onEditPress={() => navigation.navigate(routes.PROFILE_EDIT, userData)}
+                    />
+                </View>
+                <View style={styles.userContainer}>
+                    <FlatList
+                        data={menuItems}
+                        keyExtractor={menuItem => menuItem.title}
+                        ItemSeparatorComponent={ListItemSeparator}
+                        renderItem={({ item }) =>
+                            <ListItems
+                                title={item.title}
+                                IconComponent={
+                                    <Icon name={item.icon.name} backgroundColor={item.icon.backgroundColor} />
                                 }
-                            }}
-                            isChevron
-                        />
+                                onPress={() => {
+                                    if (item.title === "My Listings") {
+                                        navigation.navigate(item.targetScreen, userListing)
+                                    } else {
+                                        navigation.navigate(item.targetScreen)
+                                    }
+                                }}
+                                isChevron
+                            />
+                        }
+                    />
+                </View>
+                <ListItems
+                    title="Logout"
+                    IconComponent={
+                        <Icon name="logout" backgroundColor="#ffe66d" />
                     }
+                    onPress={() => logOut()}
                 />
-            </View>
-            <ListItems
-                title="Logout"
-                IconComponent={
-                    <Icon name="logout" backgroundColor="#ffe66d" />
-                }
-                onPress={() => logOut()}
-            />
-        </Screen>
+                <View style={styles.removeAccount}>
+                    <ListItems
+                        title="Delete Account"
+                        IconComponent={
+                            <Icon name="delete" backgroundColor="red" />
+                        }
+                        onPress={handleDelete}
+                    />
+                </View>
+            </Screen>
+        </React.Fragment>
     );
 }
 
@@ -100,6 +135,9 @@ const styles = StyleSheet.create({
     },
     screen: {
         backgroundColor: "#f8f4f4"
+    },
+    removeAccount: {
+        paddingTop: 10
     }
 })
 

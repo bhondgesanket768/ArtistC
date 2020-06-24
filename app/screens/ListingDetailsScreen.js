@@ -36,8 +36,12 @@ function ListingDetailsScreen({ route }) {
     }
 
     useEffect(() => {
-        getUsers();
-        getUserListing();
+        let mounted = true
+        if (mounted) {
+            getUsers();
+            getUserListing();
+        }
+        return () => mounted = false
     }, [])
 
     const coords = {
@@ -47,7 +51,9 @@ function ListingDetailsScreen({ route }) {
 
     return (
         <ScrollView>
-            <Image style={styles.image} uri={listing.images} tint="light" />
+            <View style={styles.imgContainer}>
+                <Image style={styles.image} uri={listing.images} tint="light" />
+            </View>
             <View style={styles.container}>
                 <AppText style={styles.title}>{listing.title}</AppText>
                 {listing.description !== "" && <AppText style={styles.description}>{listing.description}</AppText>}
@@ -92,9 +98,17 @@ function ListingDetailsScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-    image: {
+    imgContainer: {
         width: "100%",
-        height: 300,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row"
+    },
+    image: {
+        alignSelf: "stretch",
+        flex: 1,
+        resizeMode: "contain",
+        aspectRatio: 1
     },
     container: {
         padding: 20,

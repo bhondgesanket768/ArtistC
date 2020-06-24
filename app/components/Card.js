@@ -5,17 +5,19 @@ import AppText from './AppText';
 import { Image } from "react-native-expo-image-cache"
 import AppButton from './AppButton';
 
-function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl, remove }) {
+function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl, remove, onRemovePress }) {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.card}>
-                <Image uri={imageUrl} style={styles.cardImg} preview={{ uri: thumbnailUrl }} tint="light" />
+                <View style={styles.imageContainer}>
+                    <Image uri={imageUrl} style={styles.cardImg} preview={{ uri: thumbnailUrl }} tint="light" />
+                </View>
                 <View style={styles.container}>
                     <View>
                         <AppText style={styles.title} numberOfLines={1}>{title}</AppText>
                         <AppText style={styles.subTitle} numberOfLines={2}>{subTitle}</AppText>
                     </View>
-                    {remove && <AppButton title="Remove" onPress={onPress} />}
+                    {remove && <AppButton title="Remove" onPress={onRemovePress} />}
                 </View>
             </View>
         </TouchableOpacity>
@@ -31,12 +33,19 @@ const styles = StyleSheet.create({
         borderColor: "black",
         borderWidth: 1
     },
-    cardImg: {
+    imageContainer: {
         width: "100%",
-        height: 230,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row"
+    },
+    cardImg: {
+        flex: 1,
+        resizeMode: "contain",
+        aspectRatio: 1
     },
     container: {
-        padding: 20,
+        padding: 10,
     },
     subTitle: {
         color: "green",

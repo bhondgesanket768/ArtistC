@@ -7,5 +7,6 @@ export default Object.freeze({
     SELLER_lISTING: "SellerListing",
     MY_LISTING: "MyListings",
     Account: "Account",
-    REPLAY: "Replay"
+    REPLAY: "Replay",
+    PROFILE_EDIT: "Profile"
 })

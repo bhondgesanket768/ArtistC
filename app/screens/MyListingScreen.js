@@ -61,7 +61,7 @@ function MyListingScreen({ route }) {
                             imageUrl={item.images}
                             subTitle={"$" + item.price}
                             remove
-                            onPress={() => handleRemove(item)}
+                            onRemovePress={() => handleRemove(item)}
                         />
                     }
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
