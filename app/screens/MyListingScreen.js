@@ -18,7 +18,9 @@ function MyListingScreen({ route }) {
     const [toggle, setToggle] = useState(false)
 
     useEffect(() => {
-        getUserListing(user.userId)
+        let mounted = true
+        if (mounted) getUserListing(user.userId)
+        return () => mounted = false
     }, [toggle])
 
     const onRefresh = () => {

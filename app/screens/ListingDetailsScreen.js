@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import AppText from '../components/AppText';
 import { ListItems } from "../components/Lists"
 import { Image } from "react-native-expo-image-cache"
 import ContactSellerForm from '../components/ContactSellerForm';
-import AuthApi from "../api/auth"
 import listingApi from "../api/Listings"
 import { useNavigation } from '@react-navigation/native';
 import routes from "../navigation/Routes"
@@ -18,18 +17,11 @@ function ListingDetailsScreen({ route }) {
 
     const navigation = useNavigation();
 
-    const [user, setUser] = useState();
     const [userListing, setUserListing] = useState([]);
     const [totalListings, setTotalListings] = useState(0);
 
-    const getUsers = async () => {
-        const result = await AuthApi.getUser(listing.userId)
-        if (!result.ok) return;
-        setUser(result.data)
-    }
-
     const getUserListing = async () => {
-        const result = await listingApi.getUserListing(listing.userId)
+        const result = await listingApi.getUserListing(listing.userId._id)
         if (!result.ok) return;
         setUserListing(result.data)
         setTotalListings(result.data.length)
@@ -38,7 +30,6 @@ function ListingDetailsScreen({ route }) {
     useEffect(() => {
         let mounted = true
         if (mounted) {
-            getUsers();
             getUserListing();
         }
         return () => mounted = false
@@ -61,8 +52,8 @@ function ListingDetailsScreen({ route }) {
                 <AppText style={styles.price}>{`$ ${listing.price}`}</AppText>
                 <View style={styles.userContainer}>
                     <ListItems
-                        image={user ? user.profile : " "}
-                        title={user ? user.name : " "}
+                        image={listing.userId ? listing.userId.profile : " "}
+                        title={listing.userId ? listing.userId.name : " "}
                         subTitle={`${totalListings} listings`}
                         isChevron
                         account
@@ -71,7 +62,7 @@ function ListingDetailsScreen({ route }) {
                 </View>
                 <View style={styles.contact}>
                     <AppText>Seller Contact : </AppText>
-                    <AppText style={styles.no}>{user ? user.phone : " "}</AppText>
+                    <AppText style={styles.no}>{listing.userId ? listing.userId.phone : " "}</AppText>
                 </View>
                 <ContactSellerForm listing={listing} />
             </View>

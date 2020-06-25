@@ -54,8 +54,8 @@ function MessagesScreen(props) {
             <FlatList
                 data={msgList}
                 keyExtractor={msg => msg._id.toString()}
-                renderItem={({ item }) => <ListItems title={item.senderName}
-                    image={item.senderProfile}
+                renderItem={({ item }) => <ListItems title={item.formUser.name}
+                    image={item.formUser.profile}
                     subTitle={item.content}
                     onPress={() => navigation.navigate(routes.REPLAY, item)}
                     renderRightActions={() => <ListItemsDelete onPress={() => handleDelete(item)} />}

@@ -26,7 +26,7 @@ function ImageInput({ imageUri, onChangeImage, profile }) {
                 onChangeImage(result.uri)
             }
         } catch (err) {
-            console.log("error in cpaturing image", err)
+            console.log("error in capturing image", err)
         }
     }
 
@@ -34,7 +34,7 @@ function ImageInput({ imageUri, onChangeImage, profile }) {
         if (!imageUri) {
             selectImage();
         } else {
-            Alert.alert("Delete", "Are you sure you want to remove this image ?", [
+            Alert.alert("Delete", profile ? "Are you sure you want to remove this image and add new one ?" : "Are you sure you want to remove this image ?", [
                 { text: "Yes", onPress: () => onChangeImage(null) },
                 { text: "No" }
             ])
