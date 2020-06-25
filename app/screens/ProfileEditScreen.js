@@ -135,7 +135,8 @@ function ProfileEditScreen({ route }) {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20
+        padding: 20,
+        paddingTop: 3
     },
     profile: {
         justifyContent: "center",

@@ -9,7 +9,7 @@ function WelcomeScreen({ navigation }) {
         <ImageBackground source={require("../assets/background.jpg")} style={styles.background}>
             <View style={styles.container}>
                 <Image source={require("../assets/logo.png")} style={styles.logo} />
-                <Text style={styles.tagLine}>Sell your artistic work here</Text>
+                <Text style={styles.tagLine}>Buy and sell artistic work</Text>
             </View>
             <View style={styles.buttonContainer}>
                 <AppButton title="login" onPress={() => navigation.navigate(routes.lOGIN)} />

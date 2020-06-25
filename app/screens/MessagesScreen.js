@@ -46,7 +46,7 @@ function MessagesScreen(props) {
     }
 
     return (
-        <Screen>
+        <Screen style={styles.container}>
             <ActivityIndicator visible={loading} />
             {!loading && msgList.length === 0 && <View style={styles.empty}>
                 <AppText>Your message list is empty</AppText>
@@ -74,6 +74,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center"
+    },
+    container: {
+        paddingTop: 3
     }
 })
 
