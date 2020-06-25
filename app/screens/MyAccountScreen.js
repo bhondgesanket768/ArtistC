@@ -8,6 +8,7 @@ import useAuth from '../auth/useAuth';
 import AuthApi from "../api/auth"
 import listingApi from "../api/Listings"
 import ActivityIndicator from '../components/ActivityIndicator';
+import useApi from "../hooks/useApi"
 
 const menuItems = [
     {
@@ -33,6 +34,7 @@ function MyAccountScreen({ navigation, route }) {
     const { user, logOut } = useAuth()
     const [userData, setUserData] = useState();
     const [userListing, setUserListing] = useState([]);
+    const deleteApi = useApi(AuthApi.deleteAccount)
 
     const getUsers = async () => {
         const result = await AuthApi.getUser(user.userId)
@@ -56,9 +58,9 @@ function MyAccountScreen({ navigation, route }) {
     }, [route.params])
 
     const removeUser = async (userId) => {
-        const result = await AuthApi.deleteAccount(userId)
+        const result = await deleteApi.request(userId)
         if (!result.ok) {
-            Alert.alert("Error", "Could not able to delete your account, something went wrong")
+            return Alert.alert("Error", "Could not able to delete your account, something went wrong")
         }
         logOut();
         Alert.alert("Success", "Account deleted successfully")
@@ -73,7 +75,7 @@ function MyAccountScreen({ navigation, route }) {
 
     return (
         <React.Fragment>
-            <ActivityIndicator visible={!userData} />
+            <ActivityIndicator visible={!userData || deleteApi.loading} />
             <Screen style={styles.screen}>
                 <View style={styles.userContainer}>
                     <ListItems
