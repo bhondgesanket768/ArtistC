@@ -18,7 +18,13 @@ const Header = () => {
 }
 
 const FeedNavigator = () => (
-    <Stack.Navigator mode="modal" >
+    <Stack.Navigator mode="modal"
+        screenOptions={{
+            headerStyle: {
+                backgroundColor: "orange",
+            },
+        }}
+    >
         <Stack.Screen name="Listings" component={ListingsScreen} options={{ headerTitle: props => <Header {...props} /> }} />
         <Stack.Screen name="ListingDetails" component={ListingDetailsScreen} />
         <Stack.Screen name="SellerListing" component={SellerListing} />

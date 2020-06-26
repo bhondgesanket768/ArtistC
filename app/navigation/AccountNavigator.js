@@ -10,7 +10,13 @@ import ProfileEditScreen from "../screens/ProfileEditScreen"
 const Stack = createStackNavigator()
 
 const AccountNavigator = () => (
-    <Stack.Navigator>
+    <Stack.Navigator
+        screenOptions={{
+            headerStyle: {
+                backgroundColor: "orange",
+            },
+        }}
+    >
         <Stack.Screen name="Account" component={MyAccountScreen} />
         <Stack.Screen name="Messages" component={MessagesScreen} />
         <Stack.Screen name="MyListings" component={MyListingScreen} />
