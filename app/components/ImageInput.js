@@ -44,7 +44,7 @@ function ImageInput({ imageUri, onChangeImage, profile }) {
     return (
         <TouchableWithoutFeedback onPress={handlePress}>
             <View style={profile ? [styles.container, { borderRadius: 55 }] : styles.container}>
-                {imageUri ? <Image source={{ uri: imageUri }} style={styles.image} /> : <MaterialCommunityIcons name="camera" color="white" size={30} />}
+                {imageUri ? <Image source={{ uri: imageUri }} style={styles.image} /> : profile ? <MaterialCommunityIcons name="account" color="white" size={80} /> : <MaterialCommunityIcons name="camera" color="white" size={30} />}
             </View>
         </TouchableWithoutFeedback>
     );
