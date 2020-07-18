@@ -3,7 +3,7 @@
     "name": "ArtistC",
     "slug": "ArtistC",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
     "splash": {
@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["**/*"],
     "android": {
       "package": "com.movietpoint.artistc",
-      "versionCode": 1
+      "versionCode": 3
     },
     "ios": {
       "supportsTablet": true
