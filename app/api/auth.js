@@ -2,7 +2,7 @@ import client from "./client"
 
 const login = (email, password) => client.post("/auth", { email, password })
 
-const register = (userInfo) => {
+const register = (userInfo) =>   {
     return client.post("/users/register", userInfo)
 }
 
