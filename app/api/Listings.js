@@ -2,7 +2,7 @@ import client from "./client"
 
 const getListings = () => client.get("/listings")
 
-const postListings = (listing, onUploadProgress) => {
+const postListings = (listing, onUploadProgress) =>  {
     return client.post("/listings", listing, {
         onUploadProgress: progress => onUploadProgress(progress.loaded / progress.total)
     })
